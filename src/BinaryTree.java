@@ -10,7 +10,7 @@ public class BinaryTree {
     }
 
     private TreeNode addRecursive(TreeNode node, int value, boolean highlighted) {
-        if (node == null) return new TreeNode(value);
+        if (node == null) return new TreeNode(value, highlighted);
 
         if (value < node.value) {
             node.left = addRecursive(node.left, value, highlighted);

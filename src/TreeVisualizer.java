@@ -18,14 +18,74 @@ public class TreeVisualizer {
 
     private void setupGUI() {
         UI.initialise();
-        UI.getFrame().setTitle("Binary Tree Visualizer");
-        UI.setWindowSize(1080, 720);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) (screenSize.getWidth() * 0.5);
+        int height = (int) (screenSize.getHeight() * 0.5);
+        UI.setWindowSize(width, height);
+        int x = (int) ((screenSize.getWidth() - width) / 2);
+        int y = (int) ((screenSize.getHeight() - height) / 2);
+        UI.getFrame().setLocation(x, y);
         UI.addButton("Add Node", this::addNode);
-        UI.addButton("Draw Tree", this::drawTree);
         UI.addButton("Sum Tree", this::sumTree);
         UI.addButton("Binary Search", this::binarySearch);
+        UI.addButton("Print Pre-Order", this::printPreOrder);
+        UI.addButton("Print Post-Order", this::printPostOrder);
+        UI.addButton("Print In-Order", this::printInOrder);
         UI.addButton("Quit", UI::quit);
+        UI.getFrame().setTitle("Binary Tree Visualizer");
+        UI.setDivider(0.225);
         init();
+        print(" Binary Tree Visualizer v1.0 ");
+        UI.sleep(500);
+        print("  Select an option to start ");
+    }
+
+    private void printPreOrder() {
+        UI.clearText();
+        printPreOrder(tree.root, "");
+    }
+
+    private void printPreOrder(TreeNode node, String prefix) {
+        if (node == null) return;
+        UI.sleep(15);
+        UI.println(prefix + node.value);
+        printPreOrder(node.left, prefix + " ");
+        printPreOrder(node.right, prefix + " ");
+    }
+
+    public void printPostOrder() {
+        UI.clearText();
+        printPostOrder(tree.root, "");
+    }
+
+    private void printPostOrder(TreeNode node, String prefix) {
+        if (node == null) return;
+        UI.sleep(15);
+        printPostOrder(node.left, prefix + " ");
+        printPostOrder(node.right, prefix + " ");
+        UI.println(prefix + node.value);
+    }
+
+
+    public void printInOrder() {
+        UI.clearText();
+        printInOrder(tree.root, "");
+    }
+
+    private void printInOrder(TreeNode node, String prefix) {
+        if (node == null) return;
+        UI.sleep(15);
+        printInOrder(node.left, prefix + " ");
+        UI.println(prefix + node.value);
+        printInOrder(node.right, prefix + " ");
+    }
+
+    public void print(String s) {
+        UI.clearText();
+        for (char str : s.toCharArray()) {
+            UI.print(str);
+            UI.sleep(15);
+        }
     }
 
     private void init() {
@@ -35,9 +95,9 @@ public class TreeVisualizer {
         drawTree();
     }
 
-    private void sumTree() {
+    public void sumTree() {
         int sum = sumTree(tree.root);
-        UI.println(sum);
+        print("The sum of the tree is: " + sum);
     }
 
     private int sumTree(TreeNode node) {
@@ -46,14 +106,14 @@ public class TreeVisualizer {
     }
 
     public void binarySearch() {
-        UI.clearText();
-        int target = UI.askInt("Target: ");
+        print("Target");
+        int target = UI.askInt(": ");
         TreeNode node = binarySearch(tree.root, target);
         if (node == null) {
-            UI.println("Target " + target + " not found!");
+            print("Target " + target + " not found!");
         } else {
             node.setHighlighted(true);
-            UI.println(node.value);
+            print("Found " + node.value);
         }
         drawTree();
     }
@@ -69,7 +129,13 @@ public class TreeVisualizer {
     }
 
     private void addNode() {
-        int val = UI.askInt("Enter a number: ");
+        print("Enter a number");
+        int val = UI.askInt(": ");
+        for (int value : values) {
+            if (value == val) {
+                print("Tree contains " + val);
+            }
+        }
         tree.add(val);
         drawTree();
     }
@@ -89,21 +155,19 @@ public class TreeVisualizer {
             UI.setColor(Color.green);
             UI.eraseOval(x - 15, y - 15, 30, 30);
             UI.fillOval(x - 15, y - 15, 30, 30);
-            UI.setColor(Color.black);
-            UI.drawOval(x - 15, y - 15, 30, 30);
-            UI.drawString(Integer.toString(node.value), x - 5, y + 5);
         } else {
             UI.eraseOval(x - 15, y - 15, 30, 30);
-            UI.drawOval(x - 15, y - 15, 30, 30);
-            UI.drawString(Integer.toString(node.value), x - 5, y + 5);
         }
+        UI.setColor(Color.black);
+        UI.drawString(Integer.toString(node.value), x - 5, y + 5);
+        UI.drawOval(x - 15, y - 15, 30, 30);
 
         if (node.left != null) { // Draw left
-            UI.drawLine(x, y, x - offset, y + 50);
+            UI.drawLine(x - 5, y + 15, x - offset, y + 50);  // Adjusted coordinates
             drawNode(node.left, x - offset, y + 50, offset / 2);
         }
         if (node.right != null) { // Draw right
-            UI.drawLine(x, y, x + offset, y + 50);
+            UI.drawLine(x + 5, y + 15, x + offset, y + 50);  // Adjusted coordinates
             drawNode(node.right, x + offset, y + 50, offset / 2);
         }
     }
