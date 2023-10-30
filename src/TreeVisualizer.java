@@ -40,6 +40,10 @@ public class TreeVisualizer {
         print("  Select an option to start ");
     }
 
+    /**
+     * Preorder starts at the root and traverses
+     * to the leaf nodes
+     */
     private void printPreOrder() {
         UI.clearText();
         printPreOrder(tree.root, "");
@@ -53,6 +57,9 @@ public class TreeVisualizer {
         printPreOrder(node.right, prefix + " ");
     }
 
+    /**
+     * Post order traversal starts at the bottom of the tree and moves to the top
+     */
     public void printPostOrder() {
         UI.clearText();
         printPostOrder(tree.root, "");
@@ -66,7 +73,9 @@ public class TreeVisualizer {
         UI.println(prefix + node.value);
     }
 
-
+    /**
+     * Traverses the tree from left to right
+     */
     public void printInOrder() {
         UI.clearText();
         printInOrder(tree.root, "");
